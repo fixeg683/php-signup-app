@@ -33,4 +33,17 @@ class InputValidator {
 
         return $errors;
     }
+
+    public static function validateLogin(array $input): array {
+        $errors = [];
+
+        if (empty($input['email']) || !filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'A valid email address is required.';
+        }
+        if (empty($input['password']) || strlen($input['password']) < 8) {
+            $errors['password'] = 'Password must be at least 8 characters long.';
+        }
+
+        return $errors;
+    }
 }
