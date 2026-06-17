@@ -4,7 +4,7 @@ document.getElementById('signupForm').addEventListener('submit', async function(
     // Clear DOM state validation states
     clearErrors();
     
-    const API_ENDPOINT = 'https://your-actual-php-backend-url.com/index.php'; // Change this line: Replace with your actual deployed PHP backend URL
+    const API_ENDPOINT = 'https://signup-app-with-email-confirmation.onrender.com/index.php';
     const submitBtn = document.getElementById('submitBtn');
     
     const formData = {
