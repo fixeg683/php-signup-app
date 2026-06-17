@@ -4,7 +4,7 @@ document.getElementById('signupForm').addEventListener('submit', async function(
     // Clear DOM state validation states
     clearErrors();
     
-    const API_ENDPOINT = 'https://api.yourdomain.com/index.php'; // Map to your decoupled PHP live server endpoint
+    const API_ENDPOINT = 'https://your-actual-php-backend-url.com/index.php'; // Change this line: Replace with your actual deployed PHP backend URL
     const submitBtn = document.getElementById('submitBtn');
     
     const formData = {
