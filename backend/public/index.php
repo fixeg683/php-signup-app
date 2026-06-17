@@ -1,5 +1,8 @@
 <?php
-header("Access-Control-Allow-Origin: " . ($_ENV['ALLOWED_ORIGIN'] ?? '*'));
+// Use getenv() to support Docker/Render environment loading safely
+$allowed_origin = getenv('ALLOWED_ORIGIN') ?: ($_ENV['ALLOWED_ORIGIN'] ?? '*');
+
+header("Access-Control-Allow-Origin: " . $allowed_origin);
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Content-Type, X-Requested-With");
 header("Access-Control-Allow-Methods: POST, OPTIONS");

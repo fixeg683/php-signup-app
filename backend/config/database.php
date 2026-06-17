@@ -9,11 +9,11 @@ class Database {
 
     public static function getConnection(): PDO {
         if (self::$instance === null) {
-            $host = $_ENV['SUPABASE_DB_HOST'];
-            $db   = $_ENV['SUPABASE_DB_NAME'];
-            $user = $_ENV['SUPABASE_DB_USER'];
-            $pass = $_ENV['SUPABASE_DB_PASSWORD'];
-            $port = $_ENV['SUPABASE_DB_PORT'];
+            $host = getenv('SUPABASE_DB_HOST');
+            $db   = getenv('SUPABASE_DB_NAME');
+            $user = getenv('SUPABASE_DB_USER');
+            $pass = getenv('SUPABASE_DB_PASSWORD');
+            $port = getenv('SUPABASE_DB_PORT');
             
             $dsn = "pgsql:host=$host;port=$port;dbname=$db;sslmode=require;";
             
