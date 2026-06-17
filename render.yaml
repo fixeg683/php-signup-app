@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: php-signup-backend
+    runtime: php
+    buildCommand: composer install
+    startCommand: php -S 0.0.0.0:$PORT -t public/
+    envVars:
+      - key: ALLOWED_ORIGIN
+        value: https://php-signup-app.jacobotana96.workers.dev
+      - key: DB_HOST
+        fromDatabase:
+          name: postgres-db
+          property: host
+      - key: DB_NAME
+        fromDatabase:
+          name: postgres-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: postgres-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: postgres-db
+          property: password
+      - key: DB_PORT
+        fromDatabase:
+          name: postgres-db
+          property: port
