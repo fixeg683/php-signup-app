@@ -1,8 +1,12 @@
 FROM php:8.2-apache
 
-# Install PostgreSQL client libraries required for Supabase
-RUN apt-get update && apt-get install -y libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql
+# Install system dependencies, zip tools, and PostgreSQL developer libraries
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    git \
+    unzip \
+    libzip-dev \
+    && docker-php-ext-install pdo pdo_pgsql zip
 
 # Enable Apache mod_rewrite for clean routing handling
 RUN a2enmod rewrite
@@ -19,5 +23,5 @@ COPY . /var/www/html/
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN cd /var/www/html && composer install --no-dev --optimize-autoloader
 
-# Expose standard port and set permissions
+# Expose standard port
 EXPOSE 80
