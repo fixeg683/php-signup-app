@@ -65,13 +65,13 @@ class LoginController {
                 // Establish Secure Session Configuration
                 if (session_status() === PHP_SESSION_NONE) {
                     // Set secure cookie attributes before starting session
-                    session_ Ramsey_cookie_params([
+                    session_set_cookie_params([
                         'lifetime' => 86400, // 24 Hours
                         'path' => '/',
-                        'domain' => parse_url($_ENV['ALLOWED_ORIGIN'], PHP_URL_HOST),
+                        'domain' => parse_url(getenv('ALLOWED_ORIGIN') ?: 'https://php-signup-app.jacobotana96.workers.dev', PHP_URL_HOST),
                         'secure' => true,
                         'httponly' => true,
-                        'samesite' => 'None' // Critical configuration for cross-origin setups
+                        'samesite' => 'None'
                     ]);
                     session_start();
                 }
