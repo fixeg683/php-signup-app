@@ -24,4 +24,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN cd /var/www/html && composer install --no-dev --optimize-autoloader
 
 # Expose standard port
-EXPOSE 80
+# Expose Render's dynamic port
+ENV PORT=10000
+EXPOSE 10000
+
+# Override Apache to listen on $PORT
+CMD sed -i "s/Listen 80/Listen ${PORT}/" /etc/apache2/ports.conf && \
+    sed -i "s/:80>/:${PORT}>/" /etc/apache2/sites-available/*.conf && \
+    apache2-foreground
