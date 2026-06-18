@@ -7,9 +7,8 @@ use PDOException;
 
 class LoginController {
     public function handleLogin() {
-        // Cross-Origin Access Control for Cloudflare Pages frontend
-        header("Access-Control-Allow-Origin: https://php-signup-app.jacobotana96.workers.dev");
-        header("Access-Control-Allow-Credentials: true");
+        // CORS headers are already set globally in index.php
+        // Do not duplicate them here to avoid header conflicts
         
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('HTTP/1.1 405 Method Not Allowed');
@@ -68,7 +67,6 @@ class LoginController {
                     session_set_cookie_params([
                         'lifetime' => 86400, // 24 Hours
                         'path' => '/',
-                        'domain' => parse_url(getenv('ALLOWED_ORIGIN') ?: 'https://php-signup-app.jacobotana96.workers.dev', PHP_URL_HOST),
                         'secure' => true,
                         'httponly' => true,
                         'samesite' => 'None'

@@ -43,7 +43,7 @@
             try {
                 const response = await fetch('https://signup-app-with-email-confirmation.onrender.com/index.php?route=login', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'FetchApp' },
                     body: JSON.stringify({ email, password })
                 });
                 
@@ -59,7 +59,9 @@
                 }
             } catch (err) {
                 msgBox.className = 'alert alert-danger';
-                msgBox.innerText = 'Network connection failure.';
+                msgBox.innerText = err.name === 'TypeError' 
+                    ? 'Server is waking up, please try again in 30 seconds.' 
+                    : 'Network connection failure.';
             }
         });
     </script>
