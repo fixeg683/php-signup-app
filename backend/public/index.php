@@ -24,9 +24,10 @@ if (file_exists(__DIR__ . '/../.env')) {
     $dotenv->load();
 }
 
-$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+// Use query parameter routing for explicit control
+$route = $_GET['route'] ?? '';
 
-if ($requestUri === '/login') {
+if ($route === 'login') {
     $controller = new LoginController();
     $controller->handleLogin();
 } else {
