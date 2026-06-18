@@ -26,8 +26,8 @@
 
             <button type="submit" id="submitBtn">Sign In</button>
         </form>
-        <p style="margin-top:1rem; text-align:center; font-size:0.9rem;">
-            Don't have an account? <a href="index.html">Sign up here</a>
+        <p style="margin-top: 1.25rem; text-align: center; font-size: 0.9rem;">
+            Don't have an account? <a href="index.html" style="color: var(--primary); text-decoration: none; font-weight: 500;">Sign up here</a>
         </p>
     </div>
     <script>
@@ -52,7 +52,6 @@
                 if (response.ok) {
                     msgBox.className = 'alert alert-success';
                     msgBox.innerText = 'Login successful! Redirecting...';
-                    // Store safe user context references locally if desired
                     localStorage.setItem('user_session', JSON.stringify(result.user));
                 } else {
                     msgBox.className = 'alert alert-danger';

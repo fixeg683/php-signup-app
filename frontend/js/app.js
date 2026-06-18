@@ -10,7 +10,8 @@ document.getElementById('signupForm').addEventListener('submit', async function(
     const formData = {
         full_name: document.getElementById('fullName').value.trim(),
         email: document.getElementById('email').value.trim(),
-        phone_number: document.getElementById('phone').value.trim()
+        phone_number: document.getElementById('phone').value.trim(),
+        password: document.getElementById('password').value
     };
 
     // Fast Client-Side Validations
