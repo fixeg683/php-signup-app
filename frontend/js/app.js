@@ -41,8 +41,9 @@ document.getElementById('signupForm').addEventListener('submit', async function(
 
         const result = await response.json();
 
-        if (response.status === 201) {
-            showAlert('alert-success', result.success);
+        // Check if the response is generally OK (status 200-299)
+        if (response.ok || response.status === 201 || response.status === 200) {
+            showAlert('alert-success', result.success || 'Signup finalized successfully.');
             document.getElementById('signupForm').reset();
         } else if (response.status === 422 && result.errors) {
             // Apply targeted backend field validation mapping directly on DOM fields
