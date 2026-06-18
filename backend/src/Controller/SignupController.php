@@ -70,8 +70,12 @@ class SignupController {
             // Outbound Notification Service
             EmailService::sendAdminNotification($name, $email, $phone);
 
-            header('HTTP/1.1 201 Created');
-            echo json_encode(['success' => 'Signup finalized successfully.']);
+            // FIX: Set explicit status code header and output structured JSON data before exiting
+            http_response_code(201);
+            echo json_encode([
+                'success' => 'Signup finalized successfully.'
+            ]);
+            exit; // Terminate execution to prevent accidental extra whitespace or warnings
 
         } catch (PDOException $e) {
             error_log("Database Storage Error: " . $e->getMessage());

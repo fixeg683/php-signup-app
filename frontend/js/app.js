@@ -39,14 +39,21 @@ document.getElementById('signupForm').addEventListener('submit', async function(
             body: JSON.stringify(formData)
         });
 
-        const result = await response.json();
-
-        // Check if the response is generally OK (status 200-299)
-        if (response.ok || response.status === 201 || response.status === 200) {
+        // 1. Check if the server returned an empty success status code first
+        if (response.status === 201 || response.status === 200) {
+            // Handle cases where the body might be empty cleanly
+            let result = {};
+            try { result = await response.json(); } catch(e) {}
+            
             showAlert('alert-success', result.success || 'Signup finalized successfully.');
             document.getElementById('signupForm').reset();
-        } else if (response.status === 422 && result.errors) {
-            // Apply targeted backend field validation mapping directly on DOM fields
+            return;
+        }
+
+        // 2. Parse errors for non-200 status codes
+        const result = await response.json();
+
+        if (response.status === 422 && result.errors) {
             for (const [key, msg] of Object.entries(result.errors)) {
                 if (key === 'full_name') showFieldError('nameError', msg);
                 if (key === 'email') showFieldError('emailError', msg);
@@ -57,7 +64,8 @@ document.getElementById('signupForm').addEventListener('submit', async function(
             showAlert('alert-danger', result.error || 'Server error occurred.');
         }
     } catch (err) {
-        showAlert('alert-danger', 'Network latency failure. Try again later.');
+        console.error("Frontend Parse Error details:", err);
+        showAlert('alert-danger', 'Network latency failure or invalid server response.');
     } finally {
         submitBtn.disabled = false;
         submitBtn.innerText = 'Register';
