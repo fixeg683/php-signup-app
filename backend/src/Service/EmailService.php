@@ -8,18 +8,18 @@ class EmailService {
     public static function sendAdminNotification(string $name, string $email, ?string $phone): bool {
         $mail = new PHPMailer(true);
         try {
-            // Server configurations
+            // Server configurations using standard platform lookups
             $mail->isSMTP();
-            $mail->Host       = $_ENV['SMTP_HOST'];
+            $mail->Host       = getenv('SMTP_HOST') ?: $_ENV['SMTP_HOST'];
             $mail->SMTPAuth   = true;
-            $mail->Username   = $_ENV['SMTP_USER'];
-            $mail->Password   = $_ENV['SMTP_PASS'];
+            $mail->Username   = getenv('SMTP_USER') ?: $_ENV['SMTP_USER'];
+            $mail->Password   = getenv('SMTP_PASS') ?: $_ENV['SMTP_PASS'];
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = (int)$_ENV['SMTP_PORT'];
+            $mail->Port       = (int)(getenv('SMTP_PORT') ?: $_ENV['SMTP_PORT']);
 
             // Recipients
-            $mail->setFrom($_ENV['SMTP_USER'], 'System Signup Alert');
-            $mail->addAddress($_ENV['ADMIN_EMAIL']);
+            $mail->setFrom(getenv('SMTP_USER') ?: $_ENV['SMTP_USER'], 'System Signup Alert');
+            $mail->addAddress(getenv('ADMIN_EMAIL') ?: $_ENV['ADMIN_EMAIL']);
 
             // Content
             $mail->isHTML(true);
