@@ -1,5 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; connect-src 'self' https://signup-app-with-email-confirmation.onrender.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-K3JtVrLw6PcFMGlJ6mtvDYjMNRUz/AvWxGQF7Z5h6uY='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://signup-app-with-email-confirmation.onrender.com; img-src 'self' data:
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
