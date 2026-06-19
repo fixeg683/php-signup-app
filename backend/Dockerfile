@@ -1,23 +1,22 @@
-FROM php:8.2-apache
+FROM php:8.2-cli
 
+# Install PostgreSQL and zip extensions
 RUN apt-get update && apt-get install -y \
-    libpq-dev git unzip libzip-dev \
-    && docker-php-ext-install pdo pdo_pgsql zip
+    libpq-dev unzip git libzip-dev \
+    && docker-php-ext-install pdo pdo_pgsql zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN a2enmod rewrite
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- \
+    --install-dir=/usr/local/bin --filename=composer
 
-# FIX: Use the actual path directly, not an env variable in sed single-quotes
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf \
- && sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/apache2.conf
+WORKDIR /var/www/html
 
-COPY . /var/www/html/
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
- && cd /var/www/html && composer install --no-dev --optimize-autoloader
-
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# Copy and install dependencies
+COPY . .
+RUN composer install --no-dev --optimize-autoloader
 
 EXPOSE 10000
-ENTRYPOINT ["/bin/bash", "/usr/local/bin/docker-entrypoint.sh"]
+
+# PHP built-in server — reads $PORT from Render's environment at runtime
+CMD php -S 0.0.0.0:${PORT:-10000} -t /var/www/html/public
