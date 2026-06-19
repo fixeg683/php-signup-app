@@ -1,16 +1,22 @@
 #!/bin/bash
 set -e
 
-# Render sets $PORT at runtime — default to 10000 if not set
 PORT="${PORT:-10000}"
-
 echo "Starting Apache on port $PORT"
 
-# Update Apache to listen on Render's assigned port
+# Fix ports.conf
 sed -i "s/Listen 80/Listen $PORT/" /etc/apache2/ports.conf
+
+# Fix VirtualHost port — escape the * for sed
 sed -i "s/<VirtualHost \*:80>/<VirtualHost *:$PORT>/" /etc/apache2/sites-available/000-default.conf
 
-# Set Apache's environment port for the virtual host
-export APACHE_LISTEN=$PORT
+# Allow .htaccess overrides for mod_rewrite to work
+cat >> /etc/apache2/sites-available/000-default.conf << EOF
 
-apache2-foreground
+<Directory /var/www/html/public>
+    AllowOverride All
+    Require all granted
+</Directory>
+EOF
+
+exec apache2-foreground

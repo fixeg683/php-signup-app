@@ -1,32 +1,23 @@
 FROM php:8.2-apache
 
-# Install system dependencies, zip tools, and PostgreSQL developer libraries
 RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    git \
-    unzip \
-    libzip-dev \
+    libpq-dev git unzip libzip-dev \
     && docker-php-ext-install pdo pdo_pgsql zip
 
-# Enable Apache mod_rewrite for clean routing handling
 RUN a2enmod rewrite
 
-# Change the Apache Document Root to point to your public directory
+# FIX: Use the actual path directly, not an env variable in sed single-quotes
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
+RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf \
+ && sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/apache2.conf
 
-# Copy application files to the container destination
 COPY . /var/www/html/
 
-# Install Composer dependencies automatically inside the container build process
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN cd /var/www/html && composer install --no-dev --optimize-autoloader
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+ && cd /var/www/html && composer install --no-dev --optimize-autoloader
 
-# Copy the entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 10000
-
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/docker-entrypoint.sh"]
