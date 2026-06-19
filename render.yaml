@@ -2,7 +2,8 @@ services:
   - type: web
     name: php-signup-backend
     runtime: php
-    buildCommand: composer install
+    rootDir: backend
+    buildCommand: composer install --no-dev --optimize-autoloader
     startCommand: php -S 0.0.0.0:$PORT -t public/
     envVars:
       - key: ALLOWED_ORIGIN
@@ -27,3 +28,8 @@ services:
         fromDatabase:
           name: postgres-db
           property: port
+
+databases:
+  - name: postgres-db
+    databaseName: signups
+    plan: free
