@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
 RUN a2enmod rewrite
 
 # Change the Apache Document Root to point to your public directory
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
@@ -23,12 +23,10 @@ COPY . /var/www/html/
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN cd /var/www/html && composer install --no-dev --optimize-autoloader
 
-# Expose standard port
-# Expose Render's dynamic port
-ENV PORT=10000
+# Copy the entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 10000
 
-# Override Apache to listen on $PORT
-CMD sed -i "s/Listen 80/Listen ${PORT}/" /etc/apache2/ports.conf && \
-    sed -i "s/:80>/:${PORT}>/" /etc/apache2/sites-available/*.conf && \
-    apache2-foreground
+ENTRYPOINT ["docker-entrypoint.sh"]
